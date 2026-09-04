@@ -2,6 +2,7 @@
 #include <WebServer.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include <Adafruit_BME680.h>
 
 // ---- Apne phone hotspot ka SSID aur password ----
 const char* ssid = "Krishna";
@@ -17,6 +18,7 @@ const int turbidityPin = 34;
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature tempSensor(&oneWire);
+Adafruit_BME680 bme;
 
 const int onTimeUs = 100;
 const int resolutionBits = 12;
@@ -28,6 +30,11 @@ int turbidityRaw = 0;
 float turbidityVoltage = 0.0;
 
 float temperatureC = 0.0;
+float humidity = 0.0;
+float bmeTemperatureC = 0.0;
+float pressureHpa = 0.0;
+float gasResistanceKohm = 0.0;
+bool bmeReady = false;
 
 uint32_t currentFreq = 200;
 bool manualMode = false;
@@ -63,6 +70,14 @@ void readTemperature() {
   if (t != DEVICE_DISCONNECTED_C) {
     temperatureC = t;
   }
+}
+
+void readBme680() {
+  if (!bmeReady || !bme.performReading()) return;
+  humidity = bme.humidity;
+  bmeTemperatureC = bme.temperature;
+  pressureHpa = bme.pressure / 100.0;
+  gasResistanceKohm = bme.gas_resistance / 1000.0;
 }
 
 // ---- Webpage HTML ----
@@ -145,6 +160,7 @@ void handleSetAuto() {
 }
 
 void handleStatus() {
+  server.sendHeader("Access-Control-Allow-Origin", "*");
   String json = "{";
   json += "\"freq\":" + String(currentFreq);
   json += ",\"manual\":" + String(manualMode ? "true" : "false");
@@ -152,6 +168,14 @@ void handleStatus() {
   json += ",\"turbRaw\":" + String(turbidityRaw);
   json += ",\"turbVoltage\":" + String(turbidityVoltage, 2);
   json += ",\"temperature\":" + String(temperatureC, 2);
+  if (bmeReady) {
+    json += ",\"humidity\":" + String(humidity, 2);
+    json += ",\"bmeTemperature\":" + String(bmeTemperatureC, 2);
+    json += ",\"pressure\":" + String(pressureHpa, 2);
+    json += ",\"gasResistance\":" + String(gasResistanceKohm, 2);
+  } else {
+    json += ",\"humidity\":null,\"bmeTemperature\":null,\"pressure\":null,\"gasResistance\":null";
+  }
   json += "}";
   server.send(200, "application/json", json);
 }
@@ -164,6 +188,17 @@ void setup() {
   pinMode(turbidityPin, INPUT);
 
   tempSensor.begin();
+  bmeReady = bme.begin(0x76);
+  if (!bmeReady) bmeReady = bme.begin(0x77);
+  if (bmeReady) {
+    bme.setTemperatureOversampling(BME680_OS_8X);
+    bme.setHumidityOversampling(BME680_OS_2X);
+    bme.setPressureOversampling(BME680_OS_4X);
+    bme.setIIRFilterSize(BME680_FILTER_SIZE_3);
+    bme.setGasHeater(320, 150);
+  } else {
+    Serial.println("BME680 not found. Environmental BME fields will be null.");
+  }
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
@@ -197,6 +232,7 @@ void loop() {
 
   readTurbidity();
   readTemperature();
+  readBme680();
 
   if (manualMode && millis() - lastManualInput > 5000) {
     manualMode = false;

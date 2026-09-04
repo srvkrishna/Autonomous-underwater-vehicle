@@ -27,6 +27,33 @@ pnpm dev
 
 The application is then available at `http://localhost:3000` when the full server scaffold is present.
 
+### ESP32 Wi-Fi telemetry
+
+The ESP32 sketch exposes sensor data at `/status`. Connect the ESP32 and the computer running this dashboard to the same Wi-Fi network, copy `.env.example` to `.env`, and set the device URL:
+
+```dotenv
+VITE_ESP32_STATUS_URL=http://192.168.1.42/status
+```
+
+Restart the development server after changing `.env`. The telemetry page polls the endpoint once per second. Without this variable, it displays the built-in representative demo stream.
+
+The ESP32 `/status` response has this shape:
+
+```json
+{
+	"distance": 184.0,
+	"turbRaw": 1488,
+	"turbVoltage": 1.2,
+	"temperature": 18.6,
+	"humidity": 62.4,
+	"bmeTemperature": 18.8,
+	"pressure": 1012.6,
+	"gasResistance": 84.2
+}
+```
+
+`temperature` comes from the DS18B20, while the BME680 supplies humidity, BME temperature, pressure, and gas resistance. Install the Arduino `Adafruit BME680 Library` and its dependencies before compiling the sketch. The ESP32 prints its assigned IP address to the Serial Monitor after joining Wi-Fi.
+
 ### Frontend-only fallback
 
 This checkout currently does not include `server/_core/index.ts` or `server/routers`, so the configured full-stack command cannot start. To preview the frontend independently, run:
