@@ -54,15 +54,17 @@ The ESP32 `/status` response has this shape:
 
 `temperature` comes from the DS18B20, while the BME680 supplies humidity, BME temperature, pressure, and gas resistance. Install the Arduino `Adafruit BME680 Library` and its dependencies before compiling the sketch. The ESP32 prints its assigned IP address to the Serial Monitor after joining Wi-Fi.
 
+For the complete hardware setup, data flow, troubleshooting steps, and cross-question preparation, see [TECHNICAL_WORKFLOW.md](TECHNICAL_WORKFLOW.md).
+
 ### Frontend-only fallback
 
-This checkout currently does not include `server/_core/index.ts` or `server/routers`, so the configured full-stack command cannot start. To preview the frontend independently, run:
+To preview the frontend independently from the backend, run:
 
 ```bash
 npx vite --host 127.0.0.1
 ```
 
-Open `http://127.0.0.1:5173/` in a browser. API-backed authentication and tRPC features require the missing backend scaffold.
+Open `http://127.0.0.1:5173/` in a browser. API-backed features require the full-stack development server.
 
 ## Routes
 
