@@ -10,6 +10,11 @@ type Esp32Status = {
   turbRaw?: number;
   turbVoltage?: number;
   temperature?: number;
+  bmeOk?: boolean;
+  bmeTemp?: number;
+  bmeHum?: number;
+  bmePress?: number;
+  bmeGas?: number;
   humidity?: number;
   bmeTemperature?: number;
   pressure?: number;
@@ -61,10 +66,10 @@ export default function Telemetry() {
     { ...demoSensors[0], value: deviceStatus?.distance?.toFixed(1) ?? demoSensors[0].value },
     { ...demoSensors[1], value: deviceStatus?.turbidity?.toFixed(1) ?? deviceStatus?.turbVoltage?.toFixed(2) ?? demoSensors[1].value, unit: deviceStatus?.turbidity === undefined && deviceStatus?.turbVoltage !== undefined ? "V" : demoSensors[1].unit },
     { ...demoSensors[2], value: deviceStatus?.temperature?.toFixed(1) ?? demoSensors[2].value },
-    { ...demoSensors[3], value: deviceStatus?.humidity?.toFixed(1) ?? "--" },
-    { ...demoSensors[4], value: deviceStatus?.bmeTemperature?.toFixed(1) ?? "--" },
-    { ...demoSensors[5], value: deviceStatus?.pressure?.toFixed(1) ?? "--" },
-    { ...demoSensors[6], value: deviceStatus?.gasResistance?.toFixed(1) ?? "--" },
+    { ...demoSensors[3], value: deviceStatus?.bmeOk === false ? "--" : (deviceStatus?.humidity ?? deviceStatus?.bmeHum)?.toFixed(1) ?? "--" },
+    { ...demoSensors[4], value: deviceStatus?.bmeOk === false ? "--" : (deviceStatus?.bmeTemperature ?? deviceStatus?.bmeTemp)?.toFixed(1) ?? "--" },
+    { ...demoSensors[5], value: deviceStatus?.bmeOk === false ? "--" : (deviceStatus?.pressure ?? deviceStatus?.bmePress)?.toFixed(1) ?? "--" },
+    { ...demoSensors[6], value: deviceStatus?.bmeOk === false ? "--" : (deviceStatus?.gasResistance ?? deviceStatus?.bmeGas)?.toFixed(1) ?? "--" },
     { ...demoSensors[7], value: deviceStatus?.salinity?.toFixed(1) ?? demoSensors[7].value },
   ];
   return <AuvShell sectionTitle="SENSOR TELEMETRY">
