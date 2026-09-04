@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="auvBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#193a52" />
+      <stop offset="100%" stop-color="#0f2434" />
+    </linearGradient>
+    <linearGradient id="glowTrans" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#78c8c2" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#78c8c2" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="#0d2232" />
+  <!-- Grid -->
+  <g stroke="#78c8c2" stroke-opacity="0.1" stroke-width="1">
+    <line x1="0" y1="100" x2="600" y2="100" />
+    <line x1="0" y1="200" x2="600" y2="200" />
+    <line x1="0" y1="300" x2="600" y2="300" />
+    <line x1="150" y1="0" x2="150" y2="400" />
+    <line x1="300" y1="0" x2="300" y2="400" />
+    <line x1="450" y1="0" x2="450" y2="400" />
+  </g>
+  <!-- AUV Torpedo Hull Silhouette -->
+  <path d="M 80 180 C 130 140, 420 140, 500 170 L 530 200 L 500 230 C 420 260, 130 260, 80 220 Z" fill="url(#auvBody)" stroke="#78c8c2" stroke-width="2" />
+  <!-- Nosecone dome (transducer array) -->
+  <path d="M 80 180 C 50 190, 50 210, 80 220 Z" fill="#b9ef1b" fill-opacity="0.85" stroke="#b9ef1b" stroke-width="2" />
+  <!-- Stabilizing Fins -->
+  <path d="M 450 148 L 500 100 L 515 156 Z" fill="#132d43" stroke="#78c8c2" stroke-width="1.5" />
+  <path d="M 450 252 L 500 300 L 515 244 Z" fill="#132d43" stroke="#78c8c2" stroke-width="1.5" />
+  <!-- Thruster propeller hub -->
+  <rect x="530" y="193" width="14" height="14" rx="2" fill="#78c8c2" />
+  <!-- Sonar Acoustic Projection Cone -->
+  <path d="M 60 200 L 0 110 L 0 290 Z" fill="url(#glowTrans)" opacity="0.4" />
+  <circle cx="60" cy="200" r="40" fill="none" stroke="#78c8c2" stroke-width="1.5" stroke-opacity="0.5" stroke-dasharray="3 3" />
+  <circle cx="60" cy="200" r="80" fill="none" stroke="#78c8c2" stroke-width="1.5" stroke-opacity="0.3" stroke-dasharray="4 4" />
+  <!-- Electronics / Bay markings -->
+  <rect x="170" y="170" width="70" height="60" rx="4" fill="#163951" stroke="#78c8c2" stroke-width="1" stroke-dasharray="2 2" />
+  <text x="205" y="204" fill="#78c8c2" font-family="monospace" font-size="10" text-anchor="middle">ESP32-S3</text>
+  <rect x="270" y="170" width="90" height="60" rx="4" fill="#163951" stroke="#78c8c2" stroke-width="1" stroke-dasharray="2 2" />
+  <text x="315" y="204" fill="#b9ef1b" font-family="monospace" font-size="10" text-anchor="middle">TX PA 3.7V</text>
+  <text x="300" y="360" fill="#a5bcc1" font-family="sans-serif" font-size="12" text-anchor="middle">AUV ADAPTIVE SONAR PAYLOAD SCHEMATIC</text>
+</svg>
